@@ -1,0 +1,32 @@
+<!--
+<h1>Image Capture / Grab Frame - Take Photo Sample</h1>
+<div class="results" id="results">
+        <section>
+          <video  class="video" id="videoStream" autoplay="" height="300" width="300" ></video>
+          <canvas class="canvas" id="takePhotoCanvas" height="300" width="300"></canvas>
+        </section>
+        <section>
+          <button class="button" id="getUserMediaButton" (click) = 'onGetUserMediaButtonClick()'>Get User Media</button>
+          <button class="button" id="takePhotoButton" (click) = 'onTakePhotoButtonClick()'>Take Photo</button>
+          <button class="button" id='toggleFlashButton' (click) = 'onToggleFlashButtonClick()'>Toggle flash</button>
+          <button class="button" id="applyConstraintsButton" (click) = 'onApplyConstraintsButtonClick()'>Apply constraints</button>
+        </section>
+</div>
+-->
+<div class="grid-container">
+  <div class="left">
+    <video  class="video" id="videoStream" autoplay=""  ></video>
+    <canvas class="canvas" id="takePhotoCanvas" ></canvas>
+  </div>
+  <div class="right">
+    <button class="button" id="getUserMediaButton" (click) = 'onGetUserMediaButtonClick()'>Get User Media</button>
+    <button class="button" id="takePhotoButton" (click) = 'onTakePhotoButtonClick()'>Take Photo</button>
+    <button class="button" id='toggleFlashButton' (click) = 'onToggleFlashButtonClick()'>Toggle flash</button>
+    <input  class='trackbar' type="range" id='changeResolutionRange'>Change resolution
+    <output id="valueChangeResolutionRange"></output>
+    <input  class='trackbar' type="range" id='changeZoomRange'>Change zoom
+    <output id="valueChangeZoomRange"></output>
+    <button class="button" id="applyConstraintsButton" (click) = 'onApplyConstraintsButtonClick()'>Apply constraints</button>
+  </div>
+
+</div>

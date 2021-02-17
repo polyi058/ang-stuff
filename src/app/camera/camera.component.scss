@@ -1,0 +1,31 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 2px 2px;
+  grid-template-areas: 'left right';
+}
+.left { grid-area: left; }
+.right { grid-area: right; }
+.button {
+  width: 100%;
+  color: white;
+  background-color: blue;
+  padding: 4px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.video {
+  width: 300px;
+  height: 300px;
+}
+.canvas {
+  width: 300px;
+  height: 300px;
+}
