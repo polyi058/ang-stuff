@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Settings } from 'http2';
-import { Capabilities } from 'protractor';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {ZXingScannerComponent} from '@zxing/ngx-scanner';
 
 @Component({
   selector: 'app-camera',
@@ -11,19 +10,35 @@ export class CameraComponent implements OnInit {
   
   constructor() { }
 
-  imageCapture: ImageCapture
+  @ViewChild('scanner', { static: false })
+  scanner: ZXingScannerComponent;
+
   stream: MediaStream
   track: MediaStreamTrack
-  wantLight: boolean
+  imageCapture: ImageCapture
+  photoCapabilities: PhotoCapabilities
+  photoSettings: PhotoSettings
+  mediaTrackCapabilities: MediaTrackCapabilities
+  mediaTrackSettings: MediaTrackSettings
 
-  photoSettings: PhotoSettings;
-  capabilities: MediaTrackCapabilities;
+  wantLight: boolean
 
   constraints: MediaTrackConstraints;
 
   trackBarResolution: any;
   trackBarZoom: any;
-  zoomSliderValue: any;
+  trackBarZoomValue: any;
+  trackBarBrightness: any;
+  trackBarBrightnessValue: any;
+  trackBarContrast: any;
+  trackBarContrastValue: any;
+  trackBarSaturation: any;
+  trackBarSaturationValue: any;
+  trackBarSharpness: any;
+  trackBarSharpnessValue: any;
+  trackBarFocusDistance: any;
+  trackBarFocusDistanceValue: any;
+
 
   ngOnInit(): void {
   }
@@ -38,41 +53,130 @@ export class CameraComponent implements OnInit {
         return this.imageCapture.getPhotoCapabilities();
       })
       .then(photoCapabilities => {
-        this.initializeTrackbarResolution(photoCapabilities);
+        this.photoCapabilities = photoCapabilities
         return this.imageCapture.getPhotoSettings()
       })
       .then(photoSettings => {
         this.photoSettings = photoSettings
-        this.trackBarResolution.value = this.photoSettings.imageWidth;
         return this.track.getCapabilities();
       })  
-      .then(capabilities => {
-        this.capabilities = capabilities;
-        this.trackBarZoom = document.querySelector('#changeZoomRange');
-        this.zoomSliderValue = document.querySelector('#valueChangeZoomRange');
-        this.trackBarZoom.min = this.capabilities.zoom.min;
-        this.trackBarZoom.max = this.capabilities.zoom.max;
-        this.trackBarZoom.step = this.capabilities.zoom.step;
-        let settings = this.track.getSettings();
-        this.trackBarZoom.value = settings.zoom;
-
-        this.trackBarZoom.addEventListener('change', (event) => {
-          this.zoomSliderValue.value = this.trackBarZoom.value;
-          this.track.applyConstraints({
-            advanced: [{zoom: event.target.value}]
-          })
-        })
+      .then(mediaTrackCapabilities => {
+        this.mediaTrackCapabilities = mediaTrackCapabilities;  
+        this.mediaTrackSettings = this.track.getSettings();
+        this.initUI();
       })
       .catch(error => {
         console.log('Oh, no!', error.name || error)
       });
   }
 
-  initializeTrackbarResolution(photoCapabilities): void {
+  initUI(): void {
+    this.initResolution();
+    this.initZoom();
+  }
+
+  initResolution(): void {
     this.trackBarResolution = document.querySelector('#changeResolutionRange');
-    this.trackBarResolution.min = photoCapabilities.imageWidth.min;
-    this.trackBarResolution.max = photoCapabilities.imageWidth.max;
-    this.trackBarResolution.step = photoCapabilities.imageWidth.step;
+    this.trackBarResolution.min = this.photoCapabilities.imageWidth.min;
+    this.trackBarResolution.max = this.photoCapabilities.imageWidth.max;
+    this.trackBarResolution.step = this.photoCapabilities.imageWidth.step;
+    this.trackBarResolution.value = this.photoSettings.imageWidth;
+  }
+
+  initZoom(): void {
+    this.trackBarZoom = document.querySelector('#changeZoomRange');
+    this.trackBarZoomValue = document.querySelector('#valueChangeZoomRange');
+    this.trackBarZoom.min = this.mediaTrackCapabilities.zoom.min;
+    this.trackBarZoom.max = this.mediaTrackCapabilities.zoom.max;
+    this.trackBarZoom.step = this.mediaTrackCapabilities.zoom.step;
+    this.trackBarZoom.value = this.mediaTrackSettings.zoom;
+    
+    this.trackBarZoom.addEventListener('change', (event) => {
+      this.trackBarZoomValue.value = this.trackBarZoom.value;
+      this.track.applyConstraints({
+        advanced: [{zoom: event.target.value}]
+      })
+    })
+  }
+
+  initBrightness(): void {
+    this.trackBarBrightness = document.querySelector('#changeBrightnessRange');
+    this.trackBarBrightnessValue = document.querySelector('#valuechangeBrightnessRange');
+    this.trackBarBrightness.min = this.mediaTrackCapabilities.brightness.min;
+    this.trackBarBrightness.max = this.mediaTrackCapabilities.brightness.max;
+    this.trackBarBrightness.step = this.mediaTrackCapabilities.brightness.step;
+    this.trackBarBrightness.value = this.mediaTrackSettings.brightness;
+    
+    this.trackBarBrightness.addEventListener('change', (event) => {
+      this.trackBarBrightnessValue.value = this.trackBarBrightness.value;
+      this.track.applyConstraints({
+        advanced: [{brightness: event.target.value}]
+      })
+    })
+  }
+
+  initContrast(): void {
+    this.trackBarContrast = document.querySelector('#changeContrastRange');
+    this.trackBarContrastValue = document.querySelector('#valuechangeContrastRange');
+    this.trackBarContrast.min = this.mediaTrackCapabilities.contrast.min;
+    this.trackBarContrast.max = this.mediaTrackCapabilities.contrast.max;
+    this.trackBarContrast.step = this.mediaTrackCapabilities.contrast.step;
+    this.trackBarContrast.value = this.mediaTrackSettings.contrast;
+    
+    this.trackBarContrast.addEventListener('change', (event) => {
+      this.trackBarContrastValue.value = this.trackBarContrast.value;
+      this.track.applyConstraints({
+        advanced: [{contrast: event.target.value}]
+      })
+    })
+  }
+
+  initSaturation(): void {
+    this.trackBarSaturation = document.querySelector('#changeSaturationRange');
+    this.trackBarSaturationValue = document.querySelector('#valuechangeSaturationRange');
+    this.trackBarSaturation.min = this.mediaTrackCapabilities.saturation.min;
+    this.trackBarSaturation.max = this.mediaTrackCapabilities.saturation.max;
+    this.trackBarSaturation.step = this.mediaTrackCapabilities.saturation.step;
+    this.trackBarSaturation.value = this.mediaTrackSettings.saturation;
+    
+    this.trackBarSaturation.addEventListener('change', (event) => {
+      this.trackBarSaturationValue.value = this.trackBarSaturation.value;
+      this.track.applyConstraints({
+        advanced: [{saturation: event.target.value}]
+      })
+    })
+  }
+
+  initSharpness(): void {
+    this.trackBarSharpness = document.querySelector('#changeSharpnessRange');
+    this.trackBarSharpnessValue = document.querySelector('#valuechangeSharpnessRange');
+    this.trackBarSharpness.min = this.mediaTrackCapabilities.sharpness.min;
+    this.trackBarSharpness.max = this.mediaTrackCapabilities.sharpness.max;
+    this.trackBarSharpness.step = this.mediaTrackCapabilities.sharpness.step;
+    this.trackBarSharpness.value = this.mediaTrackSettings.sharpness;
+    
+    this.trackBarSharpness.addEventListener('change', (event) => {
+      this.trackBarSharpnessValue.value = this.trackBarSharpness.value;
+      this.track.applyConstraints({
+        advanced: [{sharpness: event.target.value}]
+      })
+    })
+  }
+
+  initFocusDistance(): void {
+    this.trackBarFocusDistance = document.querySelector('#changeFocusDistanceRange');
+    this.trackBarFocusDistanceValue = document.querySelector('#valuechangeFocusDistanceRange');
+    this.trackBarFocusDistance.min = this.mediaTrackCapabilities.focusDistance.min;
+    this.trackBarFocusDistance.max = this.mediaTrackCapabilities.focusDistance.max;
+    this.trackBarFocusDistance.step = this.mediaTrackCapabilities.focusDistance.step;
+    this.trackBarFocusDistance.value = this.mediaTrackSettings.focusDistance;
+    
+    this.trackBarFocusDistance.addEventListener('change', (event) => {
+      this.trackBarFocusDistanceValue.value = this.trackBarFocusDistance.value;
+      this.track.applyConstraints({
+        advanced: [{focusDistance: event.target.value}]
+      })
+    })
   }
 
   onTakePhotoButtonClick(): void {
@@ -93,9 +197,7 @@ export class CameraComponent implements OnInit {
   }
 
   onApplyConstraintsButtonClick(): void {
-    this.track.applyConstraints({
-      advanced: [{zoom: (this.trackBarZoom.value as W3C.ConstrainNumber)}]
-    });
+
   }
 
   drawCanvas(canvas, img): void {
@@ -107,6 +209,14 @@ export class CameraComponent implements OnInit {
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height,
         x, y, img.width * ratio, img.height * ratio);
+  }
+
+  onCodeResult(result: String): void {
+    this.onTakePhotoButtonClick();
+  }
+
+  onCanvasClick(): void {
+
   }
 
 }

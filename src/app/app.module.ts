@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { CameraComponent } from './camera/camera.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { environment } from '../environments/environment';
     BrowserModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ZXingScannerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
