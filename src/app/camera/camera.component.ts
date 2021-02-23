@@ -13,15 +13,17 @@ export class CameraComponent implements OnInit {
   @ViewChild('scanner', { static: false })
   scanner: ZXingScannerComponent;
 
-  stream: MediaStream
-  track: MediaStreamTrack
-  imageCapture: ImageCapture
-  photoCapabilities: PhotoCapabilities
-  photoSettings: PhotoSettings
-  mediaTrackCapabilities: MediaTrackCapabilities
-  mediaTrackSettings: MediaTrackSettings
+  mediaButtonClicked = false;
 
-  wantLight: boolean
+  stream: MediaStream;
+  track: MediaStreamTrack;
+  imageCapture: ImageCapture;
+  photoCapabilities: PhotoCapabilities;
+  photoSettings: PhotoSettings;
+  mediaTrackCapabilities: MediaTrackCapabilities;
+  mediaTrackSettings: MediaTrackSettings;
+
+  wantLight: boolean;
 
   constraints: MediaTrackConstraints;
 
@@ -44,6 +46,7 @@ export class CameraComponent implements OnInit {
   }
 
   onGetUserMediaButtonClick(): void {
+    this.mediaButtonClicked = true;
     navigator.mediaDevices.getUserMedia({video: {facingMode:['environment'],}})
       .then(mediaStream => {
         this.stream = mediaStream;
@@ -213,6 +216,7 @@ export class CameraComponent implements OnInit {
 
   onCodeResult(result: String): void {
     this.onTakePhotoButtonClick();
+    this.scanner.reset();
   }
 
   onCanvasClick(): void {

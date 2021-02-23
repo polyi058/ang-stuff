@@ -1,13 +1,13 @@
 <div class="grid-container">
   <div class="top">
-    <video class="video" id="videoStream"  autoplay></video>
+    <video class="video" id="videoStream"></video>
     <zxing-scanner #scanner (scanSuccess)="onCodeResult($event)"></zxing-scanner>
     <canvas class="canvas" id="takePhotoCanvas" (click) = 'onCanvasClick()' ></canvas>
   </div>
   <div class="bottom">
-    <button class="button" id="getUserMediaButton" (click) = 'onGetUserMediaButtonClick()'>Get User Media</button>
-    <button class="button" id="takePhotoButton" (click) = 'onTakePhotoButtonClick()'>Take Photo</button>
-    <button class="button" id='toggleFlashButton' (click) = 'onToggleFlashButtonClick()'>Toggle flash</button>
+    <button mat-raised-button class="button" id="getUserMediaButton" (click) = 'onGetUserMediaButtonClick()'>Get User Media</button>
+    <button mat-raised-button class="button" id="takePhotoButton" (click) = 'onTakePhotoButtonClick()'>Take Photo</button>
+    <button mat-raised-button class="button" id='toggleFlashButton' (click) = 'onToggleFlashButtonClick()'>Toggle flash</button>
     <div>
       <input  class='trackbar' type="range" id='changeResolutionRange'>Resolution
       <output id="valueChangeResolutionRange"></output>

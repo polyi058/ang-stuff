@@ -7,6 +7,8 @@ import { CameraComponent } from './camera/camera.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
     BrowserModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    ZXingScannerModule
+    ZXingScannerModule,
+    BrowserAnimationsModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
