@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {ZXingScannerComponent} from '@zxing/ngx-scanner';
+import { ZXingScannerComponent } from '@zxing/ngx-scanner';
 
 @Component({
   selector: 'app-camera',
@@ -8,7 +8,9 @@ import {ZXingScannerComponent} from '@zxing/ngx-scanner';
 })
 export class CameraComponent implements OnInit {
   
-  constructor() { }
+  constructor() {
+    this.onGetUserMediaButtonClick();
+   }
 
   @ViewChild('scanner', { static: false })
   scanner: ZXingScannerComponent;
@@ -25,15 +27,13 @@ export class CameraComponent implements OnInit {
 
   wantLight: boolean;
 
-  constraints: MediaTrackConstraints;
+  mediaTrackConstraints: MediaTrackConstraintSet;
+  mediaTrackConstraintsSet: MediaTrackConstraintSet;
 
   trackBarResolution: any;
   trackBarZoom: any;
-  trackBarZoomValue: any;
   trackBarBrightness: any;
-  trackBarBrightnessValue: any;
   trackBarContrast: any;
-  trackBarContrastValue: any;
   trackBarSaturation: any;
   trackBarSaturationValue: any;
   trackBarSharpness: any;
@@ -67,6 +67,10 @@ export class CameraComponent implements OnInit {
         this.mediaTrackCapabilities = mediaTrackCapabilities;  
         this.mediaTrackSettings = this.track.getSettings();
         this.initUI();
+        return this.scanner.askForPermission();
+      })
+      .then(permissionGranted => {
+
       })
       .catch(error => {
         console.log('Oh, no!', error.name || error)
@@ -76,6 +80,13 @@ export class CameraComponent implements OnInit {
   initUI(): void {
     this.initResolution();
     this.initZoom();
+    //this.trackBarZoom = this.initAttribute(this.trackBarZoom, 'Zoom', this.mediaTrackCapabilities.zoom, this.mediaTrackSettings.zoom);
+    this.initBrightness();
+    //this.trackBarBrightness = this.initAttribute(this.trackBarBrightness, 'Brightness', this.mediaTrackCapabilities.brightness, this.mediaTrackSettings.brightness);
+    this.initContrast();
+    this.initSaturation();
+    this.initSharpness();
+    this.initFocusDistance();
   }
 
   initResolution(): void {
@@ -86,52 +97,38 @@ export class CameraComponent implements OnInit {
     this.trackBarResolution.value = this.photoSettings.imageWidth;
   }
 
+  initAttribute(trackBar, attributeString, attributeID, settingsID): void {
+    let query = '#change' + attributeString + 'Range';
+    trackBar = document.querySelector(query);
+    trackBar.min = attributeID.min;
+    trackBar.max = attributeID.max;
+    trackBar.step = attributeID.step;
+    trackBar.value = settingsID;
+    return trackBar
+  }
+
   initZoom(): void {
     this.trackBarZoom = document.querySelector('#changeZoomRange');
-    this.trackBarZoomValue = document.querySelector('#valueChangeZoomRange');
     this.trackBarZoom.min = this.mediaTrackCapabilities.zoom.min;
     this.trackBarZoom.max = this.mediaTrackCapabilities.zoom.max;
     this.trackBarZoom.step = this.mediaTrackCapabilities.zoom.step;
     this.trackBarZoom.value = this.mediaTrackSettings.zoom;
-    
-    this.trackBarZoom.addEventListener('change', (event) => {
-      this.trackBarZoomValue.value = this.trackBarZoom.value;
-      this.track.applyConstraints({
-        advanced: [{zoom: event.target.value}]
-      })
-    })
   }
 
   initBrightness(): void {
     this.trackBarBrightness = document.querySelector('#changeBrightnessRange');
-    this.trackBarBrightnessValue = document.querySelector('#valuechangeBrightnessRange');
     this.trackBarBrightness.min = this.mediaTrackCapabilities.brightness.min;
     this.trackBarBrightness.max = this.mediaTrackCapabilities.brightness.max;
     this.trackBarBrightness.step = this.mediaTrackCapabilities.brightness.step;
     this.trackBarBrightness.value = this.mediaTrackSettings.brightness;
-    
-    this.trackBarBrightness.addEventListener('change', (event) => {
-      this.trackBarBrightnessValue.value = this.trackBarBrightness.value;
-      this.track.applyConstraints({
-        advanced: [{brightness: event.target.value}]
-      })
-    })
   }
 
   initContrast(): void {
     this.trackBarContrast = document.querySelector('#changeContrastRange');
-    this.trackBarContrastValue = document.querySelector('#valuechangeContrastRange');
     this.trackBarContrast.min = this.mediaTrackCapabilities.contrast.min;
     this.trackBarContrast.max = this.mediaTrackCapabilities.contrast.max;
     this.trackBarContrast.step = this.mediaTrackCapabilities.contrast.step;
     this.trackBarContrast.value = this.mediaTrackSettings.contrast;
-    
-    this.trackBarContrast.addEventListener('change', (event) => {
-      this.trackBarContrastValue.value = this.trackBarContrast.value;
-      this.track.applyConstraints({
-        advanced: [{contrast: event.target.value}]
-      })
-    })
   }
 
   initSaturation(): void {
@@ -216,11 +213,27 @@ export class CameraComponent implements OnInit {
 
   onCodeResult(result: String): void {
     this.onTakePhotoButtonClick();
-    this.scanner.reset();
   }
 
   onCanvasClick(): void {
 
   }
 
+  zoomChanged(): void {
+      this.track.applyConstraints({
+        advanced: [{zoom: this.trackBarZoom.value}]
+      })
+  }
+
+  brightnessChanged(): void {
+    this.track.applyConstraints({
+      advanced: [{brightness: this.trackBarBrightness.value}]
+    })
+  }
+
+  contrastChanged(): void {
+    this.track.applyConstraints({
+      advanced: [{contrast: this.trackBarContrast.value}]
+    })
+  }
 }

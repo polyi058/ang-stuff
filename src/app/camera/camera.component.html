@@ -1,42 +1,89 @@
-<div class="grid-container">
-  <div class="top">
-    <video class="video" id="videoStream"></video>
-    <zxing-scanner #scanner (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+    <zxing-scanner id="videoStream" #scanner (scanSuccess)="onCodeResult($event)"></zxing-scanner>
     <canvas class="canvas" id="takePhotoCanvas" (click) = 'onCanvasClick()' ></canvas>
-  </div>
-  <div class="bottom">
+
     <button mat-raised-button class="button" id="getUserMediaButton" (click) = 'onGetUserMediaButtonClick()'>Get User Media</button>
     <button mat-raised-button class="button" id="takePhotoButton" (click) = 'onTakePhotoButtonClick()'>Take Photo</button>
     <button mat-raised-button class="button" id='toggleFlashButton' (click) = 'onToggleFlashButtonClick()'>Toggle flash</button>
     <div>
-      <input  class='trackbar' type="range" id='changeResolutionRange'>Resolution
-      <output id="valueChangeResolutionRange"></output>
+      <mat-slider aria-label="slider-resolution"
+        class="matSlider"
+        id = 'changeResolutionRange'
+        [step] = 'trackBarResolution.step' 
+        [min] = 'trackBarResolution.min' 
+        [max] = 'trackBarResolution.max' 
+        [(ngModel)] = 'trackBarResolution.value'>
+      </mat-slider> Resolution {{trackBarResolution.value}} 
     </div>
     <div>
-      <input  class='trackbar' type="range" id='changeZoomRange'>Zoom
-      <output id="valueChangeZoomRange"></output>
-   </div>
-   <div>
-    <input  class='trackbar' type="range" id='changeBrightnessRange'>Brightness
-    <output id="valueChangeBrightnessRange"></output>
-  </div>
-  <div>
-    <input  class='trackbar' type="range" id='changeContrastRange'>Contrast
-    <output id="valueChangeContrastRange"></output>
-  </div>
-  <div>
-    <input  class='trackbar' type="range" id='changeSaturationRange'>Saturation
-    <output id="valueChangeSaturationRange"></output>
-  </div>
-  <div>
-    <input  class='trackbar' type="range" id='changeSharpnessRange'>Sharpness
-    <output id="valueChangeSharpnessRange"></output>
-  </div>
-  <div>
-    <input  class='trackbar' type="range" id='changeFocusDistanceRange'>Focus distance
-    <output id="valueChangeFocusDistanceRange"></output>
-  </div>
-    <button class="button" id="applyConstraintsButton" (click) = 'onApplyConstraintsButtonClick()'>Apply constraints</button>
-  </div>
-
-</div>
+      <mat-slider aria-label="slider-zoom"
+        class="matSlider"
+        id = 'changeZoomRange'
+        [step] = 'trackBarZoom.step' 
+        [min] = 'trackBarZoom.min' 
+        [max] = 'trackBarZoom.max' 
+        [(ngModel)] = 'trackBarZoom.value' 
+        (change) = 'zoomChanged()'>
+      </mat-slider> Zoom {{trackBarZoom.value}} 
+    </div>
+    <div>
+      <mat-slider aria-label="slider-brightness"
+        class="matSlider"
+        id = 'changeBrightnessRange'
+        [step] = 'trackBarBrightness.step' 
+        [min] = 'trackBarBrightness.min' 
+        [max] = 'trackBarBrightness.max' 
+        [(ngModel)] = 'trackBarBrightness.value' 
+        (change) = 'brightnessChanged()'>
+      </mat-slider> Brightness {{trackBarBrightness.value}}
+    </div>
+    <!--<div>
+      <mat-slider aria-label="slider-contrast"
+        class="matSlider"
+        id = 'changeContrastRange'
+        [step] = 'trackBarContrast.step' 
+        [min] = 'trackBarContrast.min' 
+        [max] = 'trackBarContrast.max' 
+        [(ngModel)] = 'trackBarContrast.value' 
+        (change) = 'contrastChanged()'>
+      </mat-slider> Contrast {{trackBarContrast.value}}
+    </div>-->
+    <div>
+      <input  class='trackbar' type="range" id='changeSaturationRange'>Saturation 
+      <output id="valueChangeSaturationRange"></output>
+    </div>
+    <div>
+      <input  class='trackbar' type="range" id='changeSharpnessRange'>Sharpness 
+      <output id="valueChangeSharpnessRange"></output>
+    </div>
+    <div>
+      <input  class='trackbar' type="range" id='changeFocusDistanceRange'>Focus distance 
+      <output id="valueChangeFocusDistanceRange"></output>
+    </div>
+    <mat-grid-list cols="3">
+      <mat-grid-tile>
+        <mat-radio-group aria-label="White balance mode"> White balance: 
+          <mat-radio-button value='none'>None</mat-radio-button>
+          <mat-radio-button value='manual'>Manual</mat-radio-button>
+          <mat-radio-button value='single-shot'>Single-shot</mat-radio-button>
+          <mat-radio-button value='continuous'>Continuous</mat-radio-button>
+        </mat-radio-group>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-radio-group aria-label="Exposure mode"> Exposure: 
+          <mat-radio-button value='none'>None</mat-radio-button>
+          <mat-radio-button value='manual'>Manual</mat-radio-button>
+          <mat-radio-button value='single-shot'>Single-shot</mat-radio-button>
+          <mat-radio-button value='continuous'>Continuous</mat-radio-button>
+        </mat-radio-group>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-radio-group aria-label="Focus mode"> Focus: 
+          <mat-radio-button value='none'>None</mat-radio-button>
+          <mat-radio-button value='manual'>Manual</mat-radio-button>
+          <mat-radio-button value='single-shot'>Single-shot</mat-radio-button>
+          <mat-radio-button value='continuous'>Continuous</mat-radio-button>
+        </mat-radio-group>
+      </mat-grid-tile>
+    </mat-grid-list>
+  
+    <button mat-raised-button class="button" id="applyConstraintsButton" (click) = 'onApplyConstraintsButtonClick()'>Apply constraints</button>

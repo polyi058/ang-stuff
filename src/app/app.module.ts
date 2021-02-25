@@ -8,7 +8,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule } from '@angular/material/button';
+import { MaterialModule } from './material/material.module';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { MatButtonModule } from '@angular/material/button';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     ZXingScannerModule,
     BrowserAnimationsModule,
-    MatButtonModule
+    MaterialModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
